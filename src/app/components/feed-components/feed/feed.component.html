@@ -1,0 +1,50 @@
+<app-loading *ngIf="isLoading$ | async"
+  >Loading</app-loading
+>
+<prog-error-messages
+  *ngIf="error$ | async"
+></prog-error-messages>
+<div *ngIf="feed$ | async">
+  <div
+    class="article-preview"
+    *ngFor="let article of (feed$ | async)?.articles"
+  >
+    <div class="article-meta">
+      {{ (feed$ | async)?.articlesCount }}
+      <a
+        [routerLink]="[
+          '/profiles',
+          article.author.username
+        ]"
+        ><img [src]="article.author.image" alt=""
+      /></a>
+      <div class="info">
+        <a
+          [routerLink]="[
+            '/profiles',
+            article.author.username
+          ]"
+          >{{ article.author.username }}</a
+        >
+        <span class="date">{{
+          article.createdAt | date
+        }}</span>
+      </div>
+      <div class="pull-xs-right">add to fav</div>
+    </div>
+    <a
+      [routerLink]="['/article-components', article.slug]"
+      class="preview-link"
+    >
+      <h1>{{ article.title }}</h1>
+      <p>{{ article.description }}</p>
+      <app-tag-list [tags]="article.tagList"></app-tag-list>
+    </a>
+  </div>
+  <app-pagination
+    [total]="(feed$ | async).articlesCount"
+    [limit]="limit"
+    [url]="baseUrl"
+    [currPage]="currentPage"
+  ></app-pagination>
+</div>
